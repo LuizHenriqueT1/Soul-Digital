@@ -22,7 +22,7 @@ export class AdminService {
   });
   }
 
-  addAdmins(admin: Admin) {
+  addAdmin(admin: Admin) {
     return this.http.post(this.adminUrl, admin, {
       headers: { Authorization: `Beader ${this.authService.userToken}` },
   });
@@ -34,8 +34,8 @@ export class AdminService {
   });
   }
 
-  deleteAdmin(admin: Admin) {
-    return this.http.delete(`${this.addAdmins}/${admin.uid}`, {
+  delete(admin: Admin) {
+    return this.http.delete(`${this.addAdmin}/${admin.uid}`, {
       headers: { Authorization: `Beader ${this.authService.userToken}` },
   });
   }

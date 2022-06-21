@@ -1,3 +1,6 @@
+import { Router } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
+import { AuthService } from './../../services/auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,8 +9,30 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  email: string = '';
+  password: string = '';
 
-  constructor() { }
+
+  constructor(
+    private authService: AuthService,
+    private toast: HotToastService,
+    private router: Router
+  ) { }
+
+  login() {
+    this.authService
+    .login(this.email, this.password)
+      .pipe(
+        this.toast.observe({
+          loading: 'Carregando',
+          success: 'Login realizado',
+          error: 'Um erro aconteceu',
+        })
+      )
+      .subscribe(() => {
+        this.router.navigate(['/']);
+      })
+  }
 
   ngOnInit(): void {
   }
