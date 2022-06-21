@@ -10,10 +10,19 @@ import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { provideStorage,getStorage } from '@angular/fire/storage';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HotToastModule } from '@ngneat/hot-toast';
+import { AdminComponent } from './components/admin/admin.component';
+import { InfluencersComponent } from './components/influencers/influencers.component';
+import { LoginComponent } from './components/login/login.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AdminComponent,
+    InfluencersComponent,
+    LoginComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +32,8 @@ import { HotToastModule } from '@ngneat/hot-toast';
     provideFirestore(() => getFirestore()),
     provideStorage(() => getStorage()),
     NgbModule,
-    HotToastModule.forRoot()
+    HotToastModule.forRoot(),
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

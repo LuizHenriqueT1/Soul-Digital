@@ -12,6 +12,24 @@ const auth = admin.auth();
 const db = admin.firestore();
 db.settings({ ignoreUndefinedProperties: true });
 
+// middleware
+const onlySuper = async (req, res, next) => {
+    try {
+      const userToken = req.headers.authorization.slice(7); // Bearer ksanivsszvsvczxvs131234easfd32z
+      const decodedToken = await auth.verifyIdToken(userToken);
+      const user = await auth.getUser(decodedToken.uid);
+
+      if(user.customClaims["super"]) {
+        next();
+      } else {
+        res.status(401).json({ success: false, messege: "Usuário não é super administrador "})
+      }
+
+    } catch (err) {
+      res.status(400).json({ success: false, message: "Token Inválido" });
+    }
+}
+
 // Rotas
 /*
 {
@@ -21,7 +39,7 @@ db.settings({ ignoreUndefinedProperties: true });
 }
 */
 // Rota de adição
-api.post("/admin", async (req, res) => {
+api.post("/admin", onlySuper, async (req, res) => {
   try {
     const { email, password, displayName } = req.body;
 
@@ -52,13 +70,13 @@ api.post("/admin", async (req, res) => {
 });
 
 // Rota de listagem
-api.get("/admin", async (req, res) => {
+api.get("/admin", onlySuper, async (req, res) => {
   const snapshots = await db.collection("admins").get();
   const admins = snapshots.docs.map((doc) => doc.data());
   res.json(admins);
 });
 
-api.put("/admin/:uid", async (req, res) => {
+api.put("/admin/:uid", onlySuper, async (req, res) => {
   try {
     const { uid } = req.params;
     const { email, password, displayName } = req.body;
@@ -80,7 +98,7 @@ api.put("/admin/:uid", async (req, res) => {
   }
 });
 
-api.delete("/admin/:uid", async (req, res) => {
+api.delete("/admin/:uid", onlySuper, async (req, res) => {
   try {
     const { uid } = req.params;
     await auth.deleteUser(uid);
